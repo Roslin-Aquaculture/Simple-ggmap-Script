@@ -1,0 +1,111 @@
+---
+title: "R maps"
+author: "Jonathan Davies"
+date: "2025-03-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Making Maps on R using ggmap
+
+This is the script that I used to genertae the map of West Loch Tarbert for my 
+Mbiol 4th year report. It is a relatively rough script but should work for now
+in case anyone else needs to generate simple layered maps. Additional information
+for using both stadiamaps and google maps in R can be found [here](https://cran.r-project.org/web/packages/ggmap/readme/README.html)  <br />
+
+```{r packages_we_need, include=TRUE, message=FALSE, warning=FALSE}
+library("ggmap")
+library("tidyverse")
+```
+
+Before the map could be made, an API key is required. This was free and was 
+achieved by going to <https://client.stadiamaps.com/signup> and making an account.
+The API key was found at the bottom of the "Manage Properties & Authenication"
+page.  <br />
+
+The API key was then be used in the `register_stadiamaps("Personal API key",write=FALSE)` function
+  <br />
+
+```{r Obtaining_map, echo=FALSE}
+
+register_stadiamaps("091cfb39-7b46-4a45-a410-8a5bb6c6bdc4", write = FALSE)
+```
+
+To continue, the coordinates of West Loch Tarbert were required (55°48′0″N 5°30′30″W).  <br />
+
+Stadia maps works in decimal coordinates and in degrees East not degrees West so it is 
+important to convert latitude and longitude in degrees, minutes, and seconds 
+into their decimal equivalent and put negative sign in front of Westerly longitude.  <br />
+
+$$Decimal = degrees + \frac{minutes}{60} + \frac{seconds}{3600} $$
+
+```{r Defining_the_map_location, include=TRUE}
+
+WLT <- c(left = -5.56, bottom = 55.78, right = -5.43, top = 55.86) ## left/right = lon, bottom/top = lat
+
+map <- ggmap(get_stadiamap(WLT, zoom = 12, maptype = "stamen_toner_lite"))
+map
+
+```
+
+### Now to add labels
+
+First all the site coordinates in degrees and minutes but be converted to decimal.
+(All this could be done beforehand in excel and then read into R)
+
+```{r Site_data, include=TRUE}
+
+## lats
+latone <- 55 + (49.264/60)
+lattwo <- 55 + (49.777/60)
+latthree <- 55 + (49.351/60)
+latfour <- 55 + (49.230/60)
+latfive <- 55 + (50.324/60)
+latsix <- 55 + (47.787/60)
+latseven <- 55 + (48.910/60)
+
+## lons
+lonone <- 5 + (28.248/60)
+lontwo <- 5 + (28.552/60)
+lonthree <- 5 + (28.168/60)
+lonfour <- 5 + (29.051/60)
+lonfive <- 5 + (27.588/60)
+lonsix <- 5 + (31.175/60)
+lonseven <- 5 + (29.910/60)
+
+sites <- data.frame("Site"=c("Site 1","Site 2","Site 3","Site 4","Site 5","Site 6","Site 7"), 
+                    "lat"=c(latone,lattwo,latthree,latfour,latfive,latsix,latseven),
+                    "lon"=c(-lonone,-lontwo,-lonthree,-lonfour,-lonfive,-lonsix,-lonseven))
+
+## -longitude's to convert from degrees west to degrees east
+
+```
+  <br />
+  
+### Putting everything together
+
+```{r putting_everything_together, include=TRUE}
+
+map <- ggmap(get_stadiamap(WLT, zoom = 12, maptype = "stamen_toner_lite")) + 
+  geom_point(data=sites, aes(x=`lon`, y=`lat`)) + 
+  geom_text(data=sites, 
+            aes(x=`lon`,y=`lat`,label=`Site`),
+            hjust=c("left","right","left","right","right","right","right"),
+            nudge_x = c(0,-0.005,0.005,-0.005,-0.005,-0.005,-0.005),
+            nudge_y = c(-0.003,0,0,0,0,0,0)) +
+  ylab("Latitude (decimal)") +
+  xlab("Longitude (decimal)") +
+  ggtitle("Sampling Sites on West Loch Tarbert")
+map
+
+```
+
+Thank you to Sarah Salisbury for providing me with links to instruction of how
+to build maps on R using various packages.
+
+
+
+
