@@ -29,7 +29,7 @@ page.  <br />
 The API key was then be used in the `register_stadiamaps("Personal API key",write=FALSE)` function
   <br />
 
-```{r Obtaining_map, echo=FALSE}
+```{r Obtaining_map, echo=FALSE, include=FALSE}
 
 register_stadiamaps("091cfb39-7b46-4a45-a410-8a5bb6c6bdc4", write = FALSE)
 ```
