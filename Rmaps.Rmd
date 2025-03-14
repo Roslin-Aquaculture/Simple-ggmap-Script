@@ -53,7 +53,7 @@ map
 
 ### Now to add labels
 
-First all the site coordinates in degrees and minutes but be converted to decimal.
+First all the site coordinates in degrees and minutes must be converted to decimal.
 (All this could be done beforehand in excel and then read into R)
 
 ```{r Site_data, include=TRUE}
