@@ -107,7 +107,7 @@ map
 
 There is loads of code out there for adding complex scale bars to ggmaps. Most of them are out of date with 
 the new versions of R or only work with google map based ggmaps not stadiamaps. In the end I just reverted to manually adding a scale bar with geom_line. The distance between two latitude/longitudes can be determined 
-(here)<https://www.nhc.noaa.gov/gccalc.shtml>. 
+[here.](https://www.nhc.noaa.gov/gccalc.shtml) 
 
 <br />
 
