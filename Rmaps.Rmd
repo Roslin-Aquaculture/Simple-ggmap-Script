@@ -96,12 +96,31 @@ map <- ggmap(get_stadiamap(WLT, zoom = 12, maptype = "stamen_toner_lite")) +
             hjust=c("left","right","left","right","right","right","right"),
             nudge_x = c(0,-0.005,0.005,-0.005,-0.005,-0.005,-0.005),
             nudge_y = c(-0.003,0,0,0,0,0,0)) +
-  ylab("Latitude (decimal)") +
-  xlab("Longitude (decimal)") +
+  ylab("Latitude") +
+  xlab("Longitude") +
   ggtitle("Sampling Sites on West Loch Tarbert")
 map
 
 ```
+
+### Adding a Scalebar
+
+There is loads of code out there for adding complex scale bars to ggmaps. Most of them are out of date with 
+the new versions of R or only work with google map based ggmaps not stadiamaps. In the end I just reverted to manually adding a scale bar with geom_line. The distance between two latitude/longitudes can be determined 
+(here)<https://www.nhc.noaa.gov/gccalc.shtml>. 
+
+<br />
+
+```{r scale_bar, include=TRUE}
+
+scalebar <- data.frame("lon"=c(-5.445,-5.475), "lat"=c(55.785,55.785))
+
+map + geom_line(data=scalebar, aes(x=lon,y=lat), linewidth=2) + 
+  annotate("text",x=-5.46, y=55.787, label="2 Km")
+
+```
+
+<br />
 
 Thank you to Sarah Salisbury for providing me with links to instruction of how
 to build maps on R using various packages.
